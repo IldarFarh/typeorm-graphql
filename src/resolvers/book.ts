@@ -10,7 +10,6 @@ import {
   Resolver,
   Root,
 } from "type-graphql";
-import { getConnection } from "typeorm";
 import { Book } from "../entities/Book";
 import { Author } from "../entities/Author";
 import { AppContext } from "../types";
@@ -24,7 +23,7 @@ class BookInput {
   pageCount: number;
 
   @Field()
-  authorId: number;
+  authorId: string;
 }
 
 @Resolver(Book)
@@ -39,15 +38,15 @@ export class BookResolver {
     @Arg("skip", () => Int, { nullable: true }) skip: number | null,
     @Arg("limit", () => Int, { nullable: true }) limit: number | null
   ): Promise<Book[]> {
-    const query = getConnection()
-      .getRepository(Book)
-      .createQueryBuilder("book");
+    const pagination: { skip?: number, take?: number } = {}
     if (skip && limit) {
-      query.skip(skip).take(limit);
+      pagination.skip = skip;
+      pagination.take = limit;
     } else if (limit) {
-      query.take(limit);
+      pagination.take = limit;
     }
-    return query.getMany();
+    console.log(pagination)
+    return Book.find({ ...pagination });
   }
 
   @Query(() => Book, { nullable: true })

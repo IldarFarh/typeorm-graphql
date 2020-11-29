@@ -1,5 +1,8 @@
-import {createAuthorLoader} from './utils/dataloaders'
+import { Request, Response } from 'express'
+import { createAuthorLoader } from './utils/dataloaders'
 
 export type AppContext = {
-  authorLoader: ReturnType<typeof createAuthorLoader>
+  req: Request & { session: any };
+  res: Response;
+  authorLoader: ReturnType<typeof createAuthorLoader>;
 }

@@ -1,39 +1,57 @@
 import "reflect-metadata";
 import express from "express";
+import redis from 'redis'
+import session from 'express-session'
+import connectRedis from 'connect-redis'
 import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { createAuthorLoader } from "./utils/dataloaders";
-import {AuthorResolver} from './resolvers/author'
-import {BookResolver} from './resolvers/book'
+import { AuthorResolver } from './resolvers/author'
+import { BookResolver } from './resolvers/book'
 
 const main = async () => {
-  await createConnection({
-    type: "postgres",
-    host: "localhost",
-    port: 5432,
-    username: "postgres",
-    database: "typeorm",
-    synchronize: true,
-    logging: false,
-    entities: [__dirname + "/entities/*.js"],
-  });
+  await createConnection();
 
   const app = express();
+
+  const RedisStore = connectRedis(session)
+  const redisClient = redis.createClient()
+
+  app.use(
+    session({
+      name: 'qid',
+      store: new RedisStore({
+        client: redisClient,
+        disableTouch: true
+      }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 100, // 100 days
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: false // https only
+      },
+      saveUninitialized: false,
+      secret: 'somesecretstring',
+      resave: false,
+    })
+  )
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [AuthorResolver, BookResolver],
       validate: false,
     }),
-    context: () => ({
+    context: ({ req, res }) => ({
+      req,
+      res,
       authorLoader: createAuthorLoader()
     })
   });
   apolloServer.applyMiddleware({ app });
 
-  app.listen(4000, () => {
-    console.log("Server started on localhost:4000");
+  app.listen(4444, () => {
+    console.log("Server started on localhost:4444");
   });
 };
 

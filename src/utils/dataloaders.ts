@@ -1,12 +1,17 @@
 import DataLoader from "dataloader";
 import { Author } from "../entities/Author";
+import { toObjectArray } from "../utils/toObjectId"
 
 export const createAuthorLoader = () =>
-  new DataLoader<number, Author>(async (authorIds) => {
-    const authors = await Author.findByIds(authorIds as number[]);
-    const authorIdToAuthor: Record<number, Author> = {};
+  new DataLoader<string, Author>(async (authorIds) => {
+    const authors = await Author.find({
+      where: {
+        _id: { $in: toObjectArray(authorIds) },
+      }
+    });
+    const authorIdToAuthor: Record<string, Author> = {};
     authors.forEach((author) => {
-      authorIdToAuthor[author.authorId] = author;
+      authorIdToAuthor[author.id.toString()] = author;
     });
     return authorIds.map((id) => authorIdToAuthor[id]);
   });

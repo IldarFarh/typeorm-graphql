@@ -1,20 +1,16 @@
 import { Field, ObjectType } from "type-graphql";
 import {
-  BaseEntity,
   Column,
   Entity,
+  JoinTable,
   ManyToOne,
-  PrimaryGeneratedColumn,
 } from "typeorm";
 import { Author } from "./Author";
+import {Base} from "./Base"
 
 @ObjectType()
 @Entity()
-export class Book extends BaseEntity {
-  @Field()
-  @PrimaryGeneratedColumn()
-  bookId: number;
-
+export class Book extends Base {
   @Field()
   @Column({ unique: true })
   name: string;
@@ -25,9 +21,10 @@ export class Book extends BaseEntity {
 
   @Field()
   @Column()
-  authorId: number;
+  authorId: string;
 
   @Field(() => Author)
   @ManyToOne(() => Author, (author) => author.books)
+  @JoinTable()
   author: Author;
 }

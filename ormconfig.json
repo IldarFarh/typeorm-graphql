@@ -1,0 +1,14 @@
+{
+  "name": "default",
+  "type": "mongodb",
+  "host": "localhost",
+  "database": "typeorm",
+  "synchronize": true,
+  "useNewUrlParser": true,
+  "useUnifiedTopology": true,
+  "logging": "all",
+  "loggerLevel": "debug",
+  "entities": [
+    "dist/entities/*.js"
+  ]
+}
