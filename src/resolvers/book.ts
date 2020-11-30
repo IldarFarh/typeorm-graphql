@@ -4,7 +4,6 @@ import {
   Field,
   FieldResolver,
   InputType,
-  Int,
   Mutation,
   Query,
   Resolver,
@@ -13,6 +12,7 @@ import {
 import { Book } from "../entities/Book";
 import { Author } from "../entities/Author";
 import { AppContext } from "../types";
+import { createResolver } from './base'
 
 @InputType()
 class BookInput {
@@ -26,27 +26,13 @@ class BookInput {
   authorId: string;
 }
 
+const BookBaseResolver = createResolver("Books", Book, Book, BookInput);
+
 @Resolver(Book)
-export class BookResolver {
+export class BookResolver extends BookBaseResolver {
   @FieldResolver(() => Author)
   author(@Root() book: Book, @Ctx() { authorLoader }: AppContext) {
     return authorLoader.load(book.authorId);
-  }
-
-  @Query(() => [Book])
-  async books(
-    @Arg("skip", () => Int, { nullable: true }) skip: number | null,
-    @Arg("limit", () => Int, { nullable: true }) limit: number | null
-  ): Promise<Book[]> {
-    const pagination: { skip?: number, take?: number } = {}
-    if (skip && limit) {
-      pagination.skip = skip;
-      pagination.take = limit;
-    } else if (limit) {
-      pagination.take = limit;
-    }
-    console.log(pagination)
-    return Book.find({ ...pagination });
   }
 
   @Query(() => Book, { nullable: true })

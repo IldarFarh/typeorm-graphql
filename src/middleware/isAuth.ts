@@ -7,3 +7,10 @@ export const isAuth: MiddlewareFn<AppContext> = ({context}, next) => {
   }
   return next();
 }
+
+export const isAdmin: MiddlewareFn<AppContext> = ({context}, next) => {
+  if (!context.req.session.userId || context.req.session.role !== 'admin') {
+    throw new Error("Not authenticated");
+  }
+  return next();
+}

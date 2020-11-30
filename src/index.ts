@@ -7,8 +7,6 @@ import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { createAuthorLoader } from "./utils/dataloaders";
-import { AuthorResolver } from './resolvers/author'
-import { BookResolver } from './resolvers/book'
 
 const main = async () => {
   await createConnection();
@@ -39,7 +37,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [AuthorResolver, BookResolver],
+      resolvers: [__dirname + '/resolvers/*.js'],
       validate: false,
     }),
     context: ({ req, res }) => ({

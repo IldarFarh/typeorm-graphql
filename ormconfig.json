@@ -7,7 +7,7 @@
   "useNewUrlParser": true,
   "useUnifiedTopology": true,
   "logging": "all",
-  "loggerLevel": "debug",
+  "loggerLevel": "debugg",
   "entities": [
     "dist/entities/*.js"
   ]
