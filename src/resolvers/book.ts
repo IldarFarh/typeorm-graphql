@@ -26,7 +26,7 @@ class BookInput {
   authorId: string;
 }
 
-const BookBaseResolver = createResolver("Books", Book, Book, BookInput);
+const BookBaseResolver = createResolver("Book", Book, Book, BookInput);
 
 @Resolver(Book)
 export class BookResolver extends BookBaseResolver {

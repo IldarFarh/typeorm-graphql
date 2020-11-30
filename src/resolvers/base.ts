@@ -8,8 +8,9 @@ import {
   Mutation,
   Query,
   Resolver,
+  UseMiddleware,
 } from "type-graphql";
-
+import { isAdmin } from '../middleware/isAuth'
 @ArgsType()
 class GetPaginationArgs {
   @Field(() => Int, { nullable: true })
@@ -55,6 +56,7 @@ export function createResolver<T extends ClassType, X extends ClassType>(suffix:
     }
 
     @Mutation(() => Boolean, { name: `delete${suffix}` })
+    @UseMiddleware(isAdmin)
     async deleteOne(@Arg("id") id: string): Promise<Boolean> {
       await entity.delete(id);
       return true

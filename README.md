@@ -5,6 +5,7 @@
 1. yarn start
 
 ## TODO:
-* user authentification
-* rest datasources
-* subscriptions
+
+* [+] user authentification
+* [] rest datasources
+* [] subscriptions
