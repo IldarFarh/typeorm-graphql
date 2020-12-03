@@ -6,7 +6,7 @@ import {
   ManyToOne,
 } from "typeorm";
 import { Author } from "./Author";
-import {Base} from "./Base"
+import { Base } from "./Base"
 
 @ObjectType()
 @Entity()

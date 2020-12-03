@@ -1,7 +1,7 @@
 import { graphql, GraphQLSchema } from "graphql";
 import { Maybe } from "type-graphql";
 import { createSchema } from "../utils/createSchema";
-import { createAuthorLoader } from "../utils/dataloaders";
+import { createUserLoader } from "../utils/dataloaders";
 
 interface Options {
   source: string;
@@ -21,7 +21,7 @@ export const graphqlCall = async ({ source, variableValues }: Options) => {
     source,
     variableValues,
     contextValue: {
-      authorLoader: createAuthorLoader(),
+      authorLoader: createUserLoader(),
     },
   });
 };
