@@ -17,7 +17,6 @@ registerEnumType(Role, { name: 'Role' })
 @ObjectType()
 @Entity()
 export class User extends Base {
-  @Field()
   @Column({ nullable: true })
   coneUserId?: string;
 

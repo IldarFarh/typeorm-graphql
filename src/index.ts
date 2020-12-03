@@ -6,7 +6,7 @@ import connectRedis from 'connect-redis'
 import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
-import { createAuthorLoader } from "./utils/dataloaders";
+import { createUserLoader, createTagLoader } from "./utils/dataloaders";
 
 const main = async () => {
   await createConnection();
@@ -43,7 +43,8 @@ const main = async () => {
     context: ({ req, res }) => ({
       req,
       res,
-      authorLoader: createAuthorLoader()
+      userLoader: createUserLoader(),
+      tagLoader: createTagLoader(),
     })
   });
   apolloServer.applyMiddleware({ app });
